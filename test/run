@@ -564,7 +564,7 @@ Purpose: PRIMARY
         f.write(''.join(contents))
         f.close()
 
-        self.build()
+        self.build(extra_env={'DEB_BUILD_OPTIONS': 'notrimdch'})
         self.check_deb_stripfiles(False)
 
         deb = glob(os.path.join(self.workdir, 'vanilla_12*_*.deb'))[0]
@@ -583,7 +583,7 @@ Purpose: PRIMARY
     def test_native_changelog_truncation(self):
         '''Long Debian changelog for native packages gets truncated'''
 
-        self.build()
+        self.build(extra_env={'DEB_BUILD_OPTIONS': 'notrimdch'})
         self.check_deb_stripfiles(False)
 
         deb = glob(os.path.join(self.workdir, 'vanilla_12*_*.deb'))[0]
@@ -613,7 +613,7 @@ override_dh_installdocs:
 	ln -s vanilla-base debian/vanilla/usr/share/doc/vanilla
 ''')
 
-        self.build()
+        self.build(extra_env={'DEB_BUILD_OPTIONS': 'notrimdch'})
 
         deb = glob(os.path.join(self.workdir, 'vanilla_12*_*.deb'))[0]
         dpkg = subprocess.Popen('dpkg-deb --fsys-tarfile %s | tar xO ./usr/share/doc/vanilla-base/changelog.gz | gzip -cd' % deb,
@@ -636,7 +636,7 @@ override_dh_installdocs:
         with open(cpath, 'w') as f:
             f.write(''.join(contents))
 
-        self.build()
+        self.build(extra_env={'DEB_BUILD_OPTIONS': 'notrimdch'})
         self.check_deb_stripfiles(False)
 
         deb = glob(os.path.join(self.workdir, 'vanilla_12*_*.deb'))[0]
@@ -660,7 +660,7 @@ override_dh_installdocs:
         with open(cpath, 'w') as f:
             f.write(''.join(contents))
 
-        self.build()
+        self.build(extra_env={'DEB_BUILD_OPTIONS': 'notrimdch'})
         self.check_deb_stripfiles(False)
 
         deb = glob(os.path.join(self.workdir, 'vanilla_12*_*.deb'))[0]
@@ -691,7 +691,7 @@ Purpose: PPA
         with open(cpath, 'w') as f:
             f.write(''.join(contents))
 
-        self.build()
+        self.build(extra_env={'DEB_BUILD_OPTIONS': 'notrimdch'})
         self.check_deb_stripfiles(True)
 
         deb = glob(os.path.join(self.workdir, 'vanilla_12*_*.deb'))[0]
@@ -703,6 +703,22 @@ Purpose: PPA
         self.assertIn('icecream (12-1)', out)
         self.assertIn('icecream (11)', out)
         self.assertIn('icecream (1)', out)
+        self.assertNotIn('apt-get changelog', out)
+
+    def test_debian_changelog_truncation_by_debhelper(self):
+        '''Long Debian changelog gets truncated by debhelper'''
+
+        self.build(extra_env={'DEB_BUILD_OPTIONS': 'trimdch'})
+
+        deb = glob(os.path.join(self.workdir, 'vanilla_12*_*.deb'))[0]
+        dpkg = subprocess.Popen('dpkg-deb --fsys-tarfile %s | tar xO ./usr/share/doc/vanilla/changelog.gz | gzip -cd' % deb,
+                                shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        (out, err) = dpkg.communicate()
+        out = out.decode()
+        self.assertEqual(err, b'')
+        self.assertNotIn('icecream (1)', out)
+        # we use "apt-get changelog"; but debhelper use "apt changelog"
+        self.assertIn('apt changelog', out)
         self.assertNotIn('apt-get changelog', out)
 
     def test_png_shrinking(self):

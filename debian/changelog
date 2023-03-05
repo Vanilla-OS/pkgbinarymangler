@@ -1,3 +1,37 @@
+pkgbinarymangler (152) lunar; urgency=medium
+
+  [ Shengjing Zhu ]
+  * pkgstripfiles: only strip debian changelog if debhelper hasn't done so.
+    debhelper >= 13.10 strips debian changelog by default (LP: #2002871).
+
+  [ Gunnar Hjalmarsson ]
+  * Add VCS fields
+
+ -- Shengjing Zhu <shengjing.zhu@canonical.com>  Mon, 20 Feb 2023 16:56:48 +0800
+
+pkgbinarymangler (151) lunar; urgency=medium
+
+  * dh_translations:
+    - Drop the qx_meson_cmd function and use perl’s builtin qx instead
+      (see https://bugs.debian.org/1028963 for the background).
+
+ -- Gunnar Hjalmarsson <gunnarhj@ubuntu.com>  Fri, 20 Jan 2023 00:11:17 +0100
+
+pkgbinarymangler (150) lunar; urgency=medium
+
+  * dh_translations:
+    - After the latest debhelper change, the qx_cmd() function from
+      Dh_Lib.pm does not work in the context in which it's used in
+      dh_translations. So the previous qx_cmd() function has been
+      copied into dh_translations under the name qx_meson_cmd()
+      (LP: #2002845).
+  * Failing tests disabled in test/run:
+    - test_debian_changelog_truncation
+    - test_native_changelog_truncation
+    - test_ppa_debian_changelog
+
+ -- Gunnar Hjalmarsson <gunnarhj@ubuntu.com>  Sat, 14 Jan 2023 10:59:26 +0100
+
 pkgbinarymangler (149) jammy; urgency=medium
 
   * Replace deprecated `which` usage with command -v.

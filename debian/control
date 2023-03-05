@@ -14,6 +14,8 @@ Build-Depends: debhelper-compat (= 13),
                intltool
 Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
 Standards-Version: 4.5.0
+VCS-Browser: https://code.launchpad.net/~ubuntu-core-dev/+git/pkgbinarymangler/+ref/master
+VCS-Git: https://git.launchpad.net/~ubuntu-core-dev/+git/pkgbinarymangler
 
 Package: pkgbinarymangler
 Architecture: all

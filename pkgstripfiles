@@ -36,6 +36,10 @@ strip_debian_changelogs()
 {
     record_sep="^[^ ]+ (.*) .*; urgency"
     if [ -e "$dch" -a ! -L "$dch" ]; then
+	if zgrep -q "Older entries have been removed from this changelog." $dch;
+	    # already stripped by debhelper >= 13.10
+	    then return;
+	fi
 	record_count=0
 	changelog=""
 	gzip -cd $dch | (while read; do

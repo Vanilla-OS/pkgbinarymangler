@@ -88,7 +88,7 @@ sub check_buildsystem {
 
             $meson_builddir = File::Spec->rel2abs($dirs[0]);
 
-            my $all_domains = qx_cmd ("meson introspect '$meson_builddir' --targets | jq -r -M '.[].name | select(endswith(\"-pot\")) | sub(\"-pot\"; \"\")'");
+            my $all_domains = qx (meson introspect "$meson_builddir" --targets | jq -r -M '.[].name | select(endswith("-pot")) | sub("-pot"; "")');
 
             my @domains = split (' ', $all_domains);
 
@@ -101,10 +101,10 @@ sub check_buildsystem {
             } else {
                 # meson 0.49 changed the property name from 'name' to 'descriptive_name'
                 # prevent confusion due to possible help-* domain
-                my $project = qx_cmd ("meson introspect '$meson_builddir' --projectinfo | jq -r '.descriptive_name'");
+                my $project = qx (meson introspect "$meson_builddir" --projectinfo | jq -r '.descriptive_name');
                 chomp $project;
                 if ($project eq "null") {
-                    $project = qx_cmd ("meson introspect '$meson_builddir' --projectinfo | jq -r '.name'");
+                    $project = qx (meson introspect "$meson_builddir" --projectinfo | jq -r '.name');
                     chomp $project;
                 }
                 @domains = grep { $_ ne 'help-'.$project } @domains;
