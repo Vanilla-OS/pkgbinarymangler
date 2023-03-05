@@ -1,4 +1,4 @@
-pkgbinarymangler (152) lunar; urgency=medium
+pkgbinarymangler (152) unstable; urgency=medium
 
   [ Shengjing Zhu ]
   * pkgstripfiles: only strip debian changelog if debhelper hasn't done so.
@@ -7,7 +7,7 @@ pkgbinarymangler (152) lunar; urgency=medium
   [ Gunnar Hjalmarsson ]
   * Add VCS fields
 
- -- Shengjing Zhu <shengjing.zhu@canonical.com>  Mon, 20 Feb 2023 16:56:48 +0800
+ -- Mirko Brombin <send@mirko.pm>  Mon, 20 Feb 2023 16:56:48 +0800
 
 pkgbinarymangler (151) lunar; urgency=medium
 
